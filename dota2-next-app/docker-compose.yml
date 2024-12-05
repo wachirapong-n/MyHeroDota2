@@ -1,0 +1,10 @@
+services:
+  app:
+    image: my-hero-dota2-app
+    build:
+      context: ./
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
