@@ -22,10 +22,6 @@ export default function heroDetails({ params }) {
   }, []);
 
   console.log("heroww", selectedHero);
-  if (!selectedHero) {
-    return <div></div>
-  }
-
   var img = path + selectedHero.img;
   var name = selectedHero.localized_name;
   var primeAttribute = selectedHero.primary_attr;
@@ -43,15 +39,39 @@ export default function heroDetails({ params }) {
   }
   var attackMin = Math.round(selectedHero.base_attack_min + (sumAttribute * multiplier));
   var attackMax = Math.round(selectedHero.base_attack_max + (sumAttribute * multiplier));
-
+  var attackRange = selectedHero.attack_range;
+  var attackSpd = selectedHero.base_attack_time + selectedHero.base_agi;
+  var health = selectedHero.base_health + (22 * selectedHero.base_str);
+  var healthRegen = (selectedHero.base_health_regen + (0.1 * selectedHero.base_str)).toFixed(1);
+  var mana = (selectedHero.base_mana + (12 * selectedHero.base_int));
+  var manaRegen = (selectedHero.base_mana_regen + (0.05 * selectedHero.base_int)).toFixed(1);
+  var armor = (selectedHero.base_armor + (selectedHero.base_agi / 6)).toFixed(1);
+  var magicResist = Math.round(selectedHero.base_mr + (0.1 * selectedHero.base_int));
+  var movementSpd = selectedHero.move_speed;
 
   return (
     <div>
-      <img src={img} alt={name}></img>
       <div>
-        <p>attack: {attackMin} - {attackMax}</p>
+        <img src={img} alt={name}></img>
       </div>
-      <div></div>
+      <div>
+        <div className="row">
+          <div className="col">attack: {attackMin} - {attackMax}</div>
+          <div className="col">attack range: {attackRange} </div>
+          <div className="col">attack speed: {attackSpd} </div>
+        </div>
+        <div className="row">
+          <div className="col">health: {health}</div>
+          <div className="col">health regen: {healthRegen} </div>
+          <div className="col">mana: {mana} </div>
+          <div className="col">mana regen: {manaRegen} </div>
+        </div>
+        <div className="row">
+          <div className="col">armor: {armor}</div>
+          <div className="col">magic resistance: {magicResist}%</div>
+          <div className="col">movement speed: {movementSpd}</div>
+        </div>
+      </div>
     </div>
   );
 }
