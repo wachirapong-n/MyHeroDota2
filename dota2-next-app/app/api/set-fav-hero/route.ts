@@ -44,7 +44,7 @@ export async function POST(req) {
     }
     // if userFavHero in db
     if (hasFav) {
-      var isFav = data.favourite;
+      var isFav = data.favorite;
       // if user click fav
       if (isFav) {
         const updateFav = await prisma.UserFavHero.update({
@@ -56,7 +56,7 @@ export async function POST(req) {
 
           },
           data: {
-            favourite: isFav,
+            favorite: isFav,
             favDate: new Date()
           }
         })
@@ -71,7 +71,7 @@ export async function POST(req) {
 
           },
           data: {
-            favourite: isFav,
+            favorite: isFav,
           }
         })
       }
@@ -82,7 +82,7 @@ export async function POST(req) {
         data: {
           userID: data.userID,
           heroID: data.heroID,
-          favourite: data.favourite,
+          favorite: data.favorite,
           favDate: new Date()
         }
       });

@@ -10,13 +10,13 @@ datasource db {
 }
 model User {
   id        String    @id @default(uuid())
-  favourite UserFavHero[]
+  favorite UserFavHero[]
 
 }
 
 model Hero{
   id  String  @id @default(uuid())
-  favourite UserFavHero[]
+  favorite UserFavHero[]
 
 }
 
@@ -26,7 +26,7 @@ model UserFavHero{
   heroID String
   hero Hero @relation(fields: [heroID], references: [id])
 
-  favourite Boolean @default(false)
+  favorite Boolean @default(false)
   favDate DateTime 
 
   @@id([userID,heroID])

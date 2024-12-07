@@ -2,6 +2,8 @@
 
 import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import userID from "@/app/lib/userIDLocal";
 import fetchHeroes from '@/app/components/fetchHero';
 
 const HeroStats = dynamic(() => import('@/app/components/stats'), {
@@ -10,8 +12,14 @@ const HeroStats = dynamic(() => import('@/app/components/stats'), {
 const Chart = dynamic(() => import('@/app/components/chart'), {
   ssr: false,
 });
+const Fav = dynamic(() => import('@/app/components/favorite'), {
+  ssr: false,
+});
+
+
 export default function heroDetails() {
   const id = useParams<{ id: string }>().id;
+  const [isFav, setIsFav] = useState(false)
   const selectedHero = fetchHeroes(id).selectedHeroes;
   const dataLabels = fetchHeroes(id).dataLabels;
   const dataBarChart = fetchHeroes(id).dataBarChart;
@@ -51,18 +59,46 @@ export default function heroDetails() {
     selectedHero: selectedHero,
     id: id
   }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/get-user-fav", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json"
+          },
+          body: JSON.stringify({ userID: userID, heroID: id, type: "current" })
+        })
 
+        var fav = await response.json()
+        setIsFav(fav.userFav.favorite)
+
+      } catch (error) {
+        console.log("Can not fetch data:", error);
+      }
+    }
+    fetchData()
+  }, [])
   if ((dataLabels.length === 0 ||
     dataBarChart.length === 0)) {
     return (
-      <div></div>
+      <div>Loading</div>
     )
   }
 
   return (
-    <div>
-      <HeroStats data={data} />
-      <Chart dataLabels={dataLabels} dataBarChart={dataBarChart} />
+    <div >
+      <div className='flex justify-between '>
+        <div >
+          <HeroStats data={data} />
+        </div>
+        <div className="absolute top-0 left-0">
+          <Fav heroID={id} isFav={isFav} />
+        </div>
+      </div>
+      <div>
+        <Chart dataLabels={dataLabels} dataBarChart={dataBarChart} />
+      </div>
     </div>
   );
 }
