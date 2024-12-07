@@ -4,11 +4,17 @@ import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 import fetchHeroes from '@/app/components/fetchHero';
 
+const HeroStats = dynamic(() => import('@/app/components/stats'), {
+  ssr: false,
+});
+const Chart = dynamic(() => import('@/app/components/chart'), {
+  ssr: false,
+});
 export default function heroDetails() {
   const id = useParams<{ id: string }>().id;
-  const selectedHero = fetchHeroes(id).selectedHero;
+  const selectedHero = fetchHeroes(id).selectedHeroes;
   const dataLabels = fetchHeroes(id).dataLabels;
-
+  const dataBarChart = fetchHeroes(id).dataBarChart;
   const path = 'https://cdn.cloudflare.steamstatic.com'
 
   var img = path + selectedHero.img;
@@ -25,7 +31,6 @@ export default function heroDetails() {
   else if (primeAttribute === "agi") {
     sumAttribute = selectedHero.base_agi;
   }
-
 
   const data = {
     attackMin: Math.round(selectedHero.base_attack_min + (sumAttribute * multiplier)),
@@ -46,16 +51,17 @@ export default function heroDetails() {
     selectedHero: selectedHero
   }
 
-  const HeroStats = dynamic(() => import('@/app/components/stats'), {
-    ssr: false,
-  });
-  const Chart = dynamic(() => import('@/app/components/chart'), {
-    ssr: false,
-  });
+  if ((dataLabels.length === 0 ||
+    dataBarChart.length === 0)) {
+    return (
+      <div></div>
+    )
+  }
+
   return (
     <div>
       <HeroStats data={data} />
-      <Chart dataLabels={dataLabels} />
+      <Chart dataLabels={dataLabels} dataBarChart={dataBarChart} />
     </div>
   );
 }

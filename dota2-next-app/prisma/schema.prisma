@@ -1,0 +1,37 @@
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  email     String   @unique
+  name      String?
+
+  favourite UserFavHero[]
+
+}
+
+model Hero{
+  id  String  @id @default(uuid())
+  favourite UserFavHero[]
+
+}
+
+model UserFavHero{
+  userID Int
+  user  User  @relation(fields: [userID], references: [id])
+  heroID String
+  hero Hero @relation(fields: [heroID], references: [id])
+
+  favourite Boolean
+  favDate DateTime @default(now())
+
+  @@id([userID,heroID])
+}

@@ -2,21 +2,31 @@
 import { useEffect, useState } from "react";
 
 export default function fetchHeroes(id) {
-  const [selectedHero, setSelectedHero] = useState([]);
+  const [selectedHeroes, setSelectedHeroes] = useState([]);
   const [benchmarks, setBenchmarks] = useState([]);
   const [dataLabels, setDataLabels] = useState([]);
-
+  const [durations, setDurations] = useState([]);
+  const [dataBarChart, setDataBarChart] = useState([]);
   const fetchData = async () => {
-
     try {
-      const res = await fetch('https://api.opendota.com/api/heroStats');
-      const heroData = await res.json();
-      const selectedHero = heroData.filter((hero) => hero.id == id)[0];
-      setSelectedHero(selectedHero);
+      if (selectedHeroes.length === 0) {
+        const res = await fetch('https://api.opendota.com/api/heroStats');
+        const heroData = await res.json();
+        const selectedHero = heroData.filter((hero) => hero.id == id)[0];
+        setSelectedHeroes(selectedHero);
+      }
+      if (benchmarks.length === 0) {
+        const resBenchmarks = await fetch("https://api.opendota.com/api/benchmarks?hero_id=" + id);
+        const benchmarkJson = await resBenchmarks.json();
+        setBenchmarks(benchmarkJson);
+      }
 
-      const resBenchmarks = await fetch("https://api.opendota.com/api/benchmarks?hero_id=" + id);
-      const benchmarkJson = await resBenchmarks.json();
-      setBenchmarks(benchmarkJson);
+      if (durations.length === 0) {
+        const resDuration = await fetch("https://api.opendota.com/api/heroes/" + id + "/durations");
+        const durationJson = await resDuration.json();
+        var sortDuration = durationJson.sort((a, b) => a.duration_bin - b.duration_bin)
+        setDurations(sortDuration);
+      }
 
     } catch (error) {
       console.log("Can not fetch data:", error);
@@ -25,8 +35,8 @@ export default function fetchHeroes(id) {
 
   useEffect(() => {
     fetchData();
-  }, []);
-
+  }, [id]);
+  //set dataLabel for line chart
   useEffect(() => {
     var dataLabel = [];
 
@@ -62,6 +72,68 @@ export default function fetchHeroes(id) {
     }
   }, [benchmarks]);
 
-  return { selectedHero, benchmarks, dataLabels };
+  //set data for bar chart
+  useEffect(() => {
+    if (durations.length !== 0) {
+      var x = [];
+      var y = [];
+      var color = [];
+      var winRates = [];
+
+      durations.forEach(dur => {
+        x.push(dur.duration_bin / 60);
+        y.push(dur.games_played);
+        var winRate = ((dur.wins / dur.games_played) * 100).toFixed(2);
+        var colour = "red";
+        if (winRate >= 50) {
+          colour = "green";
+        }
+        color.push(colour)
+        winRates.push(winRate);
+      });
+
+      var datasets = [{
+        backgroundColor: color,
+        data: y,
+        winRates: winRates,
+      }]
+      var options = {
+        plugins: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: "durations"
+          },
+          tooltip: {
+            enabled: true,
+            callbacks: {
+              label: function (data) {
+                var duration = data.label;
+                var matches = data.dataset.data[data.dataIndex];
+                var winRate = data.dataset.winRates[data.dataIndex];
+                return ["Duration: " + duration + " min",
+                "Matches: " + matches,
+                "Win: " + winRate + "%"];
+              }
+            },
+            footer: function (tooltipItems) {
+              return "";
+            }
+          },
+
+        },
+
+      }
+
+      var dataBarChart = {
+        labels: x,
+        datasets: datasets,
+      };
+
+      setDataBarChart({ data: dataBarChart, options })
+    }
+  }, [durations]);
+
+  return { selectedHeroes, dataLabels, dataBarChart };
 
 }

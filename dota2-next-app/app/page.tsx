@@ -37,7 +37,7 @@ export default function Home() {
 
   const handleSearch = (e) => {
     var heroName = e.target.value;
-    var heroes = allHero.filter((hero) =>
+    var heroes = filteredHero.filter((hero) =>
       hero.localized_name.toLowerCase().includes(heroName.toLowerCase()))
     setFilteredHero(heroes);
     setSearchedHero(heroName);
@@ -46,13 +46,13 @@ export default function Home() {
   const handleSort = () => {
     if (sorted === "asc") {
       setSorted("desc");
-      var sortedHero = allHero.sort((a, b) =>
+      var sortedHero = filteredHero.sort((a, b) =>
         b.localized_name.localeCompare(a.localized_name));
       setFilteredHero(sortedHero);
     }
     else {
       setSorted("asc");
-      var sortedHero = allHero.sort((a, b) =>
+      var sortedHero = filteredHero.sort((a, b) =>
         a.localized_name.localeCompare(b.localized_name));
       setFilteredHero(sortedHero);
     }
@@ -253,44 +253,63 @@ export default function Home() {
 
       </div>
       <div>
-        <table>
+        <table className="border-slate-400 border border-collapse">
           <thead>
             <tr>
-              <th onClick={handleSort}>Heroes</th>
-              <td onClick={handleSort}>
-                {sorted === "asc" && (
-                  <span>
-                    <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m5 15 7-7 7 7" />
-                    </svg>
-                  </span>)}
+              <th onClick={handleSort} className="flex items-center justify-between border-slate-300 border">
+                <div>
+                  <span>Heroes</span>
+                </div>
+                <div>
+                  {sorted === "asc" && (
+                    <span>
+                      <svg className="w-6 h-6 text-gray-800 dark:text-white"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m5 15 7-7 7 7" />
+                      </svg>
+                    </span>)}
 
-                {sorted === "desc" && (
-                  <span>
-                    <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                      <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 9-7 7-7-7" />
-                    </svg>
-                  </span>
-                )}
-              </td>
+                  {sorted === "desc" && (
+                    <span>
+                      <svg className="w-6 h-6 text-gray-800 dark:text-white"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24" height="24" fill="none" viewBox="0 0 24 24">
+                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 9-7 7-7-7" />
+                      </svg>
+                    </span>
+                  )}
+                </div>
+              </th>
+
+              <th className="border-slate-400 border">Public Pick</th>
+              <th className="border-slate-400 border">Public Wins</th>
+              <th className="border-slate-400 border">Turbo Pick</th>
+              <th className="border-slate-400 border">Turbo Wins</th>
             </tr>
           </thead>
           <tbody>
             {filteredHero.map((hero) => (
               <tr key={hero.id}>
-                <th>
-                  <div className="container">
+                <th className="border-slate-400 border">
+                  <div>
                     <a href={`/heroes/${hero.id}`}><img src={path + hero.img}></img></a>
 
                     <button className="btn">&#9733;</button>
                   </div>
-
-                </th>
-                <th>
                   <a href={`/heroes/${hero.id}`}>{hero.localized_name}</a>
                 </th>
+
+                <th className="border-slate-400 border">{hero.pub_pick}</th>
+                <th className="border-slate-400 border">{hero.pub_win}</th>
+                <th className="border-slate-400 border">{hero.turbo_picks}</th>
+                <th className="border-slate-400 border">{hero.turbo_wins}</th>
               </tr>
+
             ))}
+
           </tbody>
         </table>
       </div>
