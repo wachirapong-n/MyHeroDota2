@@ -48,7 +48,8 @@ export default function heroDetails() {
     roles: selectedHero.roles,
     img: img,
     heroName: selectedHero.localized_name,
-    selectedHero: selectedHero
+    selectedHero: selectedHero,
+    id: id
   }
 
   if ((dataLabels.length === 0 ||

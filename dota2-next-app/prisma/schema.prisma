@@ -9,11 +9,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  email     String   @unique
-  name      String?
-
+  id        String    @id @default(uuid())
   favourite UserFavHero[]
 
 }
@@ -25,13 +21,18 @@ model Hero{
 }
 
 model UserFavHero{
-  userID Int
+  userID String
   user  User  @relation(fields: [userID], references: [id])
   heroID String
   hero Hero @relation(fields: [heroID], references: [id])
 
-  favourite Boolean
-  favDate DateTime @default(now())
+  favourite Boolean @default(false)
+  favDate DateTime 
 
   @@id([userID,heroID])
+}
+
+model Admin{
+  email  String @id @default(uuid())
+  password  String
 }
