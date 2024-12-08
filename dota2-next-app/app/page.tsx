@@ -1,6 +1,5 @@
 "use client"
 import { useEffect, useState } from "react";
-import ".//styles/favIcon.css";
 
 export default function Dashboard() {
   const [filteredHero, setFilteredHero] = useState([]);
@@ -26,6 +25,7 @@ export default function Dashboard() {
           b.id - a.id)
 
         var data = merge(topHero.fav, filterTopHero)
+        console.log(data)
         var sortedHero = data.sort((a, b) => {
           if (a.fav !== b.fav) {
             return b.fav - a.fav;
@@ -45,9 +45,11 @@ export default function Dashboard() {
     for (var i = 0; i < arr.length; i++) {
       var key = parseInt(arr[i].heroID)
       var val = arr[i].fav
+      var valDate = arr[i].favDate.split("T")[0]
       for (var j = 0; j < filterArr.length; j++) {
         if (filterArr[j].id === key) {
           filterArr[j]["fav"] = val;
+          filterArr[j]["favDate"] = valDate
         }
       }
     }
@@ -117,9 +119,30 @@ export default function Dashboard() {
                   <div>
                     <a href={`/heroes/${hero.id}`}><img src={path + hero.img}></img></a>
                   </div>
-                  <a href={`../heroes/${hero.id}`}>{hero.localized_name}</a>
-                  <span> ({hero.fav})</span>
+                  <a href={`../heroes/${hero.id}`} className="text-blue-500">
+
+                    <div className="relative group">
+                      <span data-proper-target="popover-default">{hero.localized_name}</span>
+
+                      <div data-popover
+                        id="popover-default"
+                        role="tooltip"
+                        className="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800 group-hover:visible group-hover:opacity-100">
+                        <div className="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
+                          <h3 className="font-semibold text-gray-900 dark:text-white">Last Favorite Date</h3>
+                        </div>
+                        <div className="px-3 py-2">
+                          <p>{hero.favDate}</p>
+                        </div>
+                        <div data-popper-arrow></div>
+                      </div>
+                    </div>
+                  </a>
+                  <span> Total Favorite(s): {hero.fav}</span>
                 </th>
+
+
+
 
                 <th className="border-slate-400 border">{hero.pub_pick}</th>
                 <th className="border-slate-400 border">{hero.pub_win}</th>
@@ -132,6 +155,9 @@ export default function Dashboard() {
           </tbody>
         </table>
       </div>
+
+
+
     </div>
   );
 }

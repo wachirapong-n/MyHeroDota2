@@ -16,55 +16,60 @@ export default function HeroList() {
 
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        var res;
-        var allHeroes;
-        if (allHero.length === 0) {
-          res = await fetch('https://api.opendota.com/api/heroStats');
-          allHeroes = await res.json();
-        }
-
-        allHeroes.forEach(hero => {
-          var temp = [...hero.roles, hero.primary_attr, hero.attack_type];
-          hero.roles = temp;
-        });
-
-        const response = await fetch("/api/get-user-fav", {
-          method: "POST",
-          headers: {
-            "content-type": "application/json"
-          },
-          body: JSON.stringify({ userID: userID, heroID: "", type: "all" })
-        })
-
-        var fav = await response.json()
-        var favArr = fav.userFav.map((hero) => hero.heroID);
-
-        allHeroes.forEach(hero => {
-          if (favArr.includes((hero.id).toString())) {
-            hero["fav"] = true
-          } else {
-            hero["fav"] = false
-          }
-        });
-
-        var sortedHero = allHeroes.sort((a, b) =>
-          a.localized_name.localeCompare(b.localized_name));
-        setAllHero(sortedHero);
-        setFilteredHero(sortedHero);
-      } catch (error) {
-        console.log("Can not fetch data:", error);
-      }
-    }
     fetchData();
-
   }, [userID]);
+
+  const fetchData = async () => {
+    try {
+      var res;
+      var allHeroes;
+      if (allHero.length === 0) {
+        res = await fetch('https://api.opendota.com/api/heroStats');
+        allHeroes = await res.json();
+      }
+
+      allHeroes.forEach(hero => {
+        var temp = [...hero.roles, hero.primary_attr, hero.attack_type];
+        hero.roles = temp;
+      });
+
+      const response = await fetch("/api/get-user-fav", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json"
+        },
+        body: JSON.stringify({ userID: userID, heroID: "", type: "all" })
+      })
+
+      var fav = await response.json()
+      var favArr = fav.userFav.map((hero) => hero.heroID);
+
+      allHeroes.forEach(hero => {
+        if (favArr.includes((hero.id).toString())) {
+          hero["fav"] = true
+        } else {
+          hero["fav"] = false
+        }
+      });
+
+      var sortedHero = allHeroes.sort((a, b) =>
+        a.localized_name.localeCompare(b.localized_name));
+      setAllHero(sortedHero);
+      setFilteredHero(sortedHero);
+    } catch (error) {
+      console.log("Can not fetch data:", error);
+    }
+  }
 
   const handleSearch = (e) => {
     var heroName = e.target.value;
-    var heroes = filteredHero.filter((hero) =>
-      hero.localized_name.toLowerCase().includes(heroName.toLowerCase()))
+    var heroes = allHero;
+
+    if (heroName !== "") {
+      heroes = filteredHero.filter((hero) =>
+        hero.localized_name.toLowerCase().includes(heroName.toLowerCase()))
+
+    }
     setFilteredHero(heroes);
     setSearchedHero(heroName);
   };
@@ -326,7 +331,7 @@ export default function HeroList() {
                     <Fav heroID={hero.id} isFav={hero.fav} />
 
                   </div>
-                  <a href={`../heroes/${hero.id}`}>{hero.localized_name}</a>
+                  <a className="text-blue-500" href={`../heroes/${hero.id}`}>{hero.localized_name}</a>
                 </th>
 
                 <th className="border-slate-400 border">{hero.pub_pick}</th>

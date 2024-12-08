@@ -65,8 +65,13 @@ export default function MyHeroList() {
 
   const handleSearch = (e) => {
     var heroName = e.target.value;
-    var heroes = filteredHero.filter((hero) =>
-      hero.localized_name.toLowerCase().includes(heroName.toLowerCase()))
+    var heroes = allHero;
+
+    if (heroName !== "") {
+      heroes = filteredHero.filter((hero) =>
+        hero.localized_name.toLowerCase().includes(heroName.toLowerCase()))
+
+    }
     setFilteredHero(heroes);
     setSearchedHero(heroName);
   };
@@ -333,7 +338,7 @@ export default function MyHeroList() {
 
 
                   </div>
-                  <a href={`../heroes/${hero.id}`}>{hero.localized_name}</a>
+                  <a className="text-blue-500" href={`../heroes/${hero.id}`}>{hero.localized_name}</a>
                 </th>
 
                 <th className="border-slate-400 border">{hero.pub_pick}</th>

@@ -37,7 +37,8 @@ export async function POST(req) {
           favorite: true,
         },
         select: {
-          heroID: true
+          heroID: true,
+          favDate: true
         }
       })
       if (userFav) {

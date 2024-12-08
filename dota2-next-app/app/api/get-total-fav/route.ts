@@ -8,13 +8,17 @@ export async function GET() {
     _count: {
       favorite: true
     },
+    _max: {
+      favDate: true
+    },
+
     where: {
       favorite: true
-    }
+    },
 
   })
 
-  var data = sumFav.map((hero) => ({ fav: hero._count.favorite, heroID: hero.heroID }))
+  var data = sumFav.map((hero) => ({ fav: hero._count.favorite, heroID: hero.heroID, favDate: hero._max.favDate }))
   var sortData = data.sort((a, b) => b.fav - a.fav)
   data = sortData.slice(0, 10)
 

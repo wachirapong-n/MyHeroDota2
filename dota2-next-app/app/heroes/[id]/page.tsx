@@ -92,7 +92,7 @@ export default function heroDetails() {
         <div >
           <HeroStats data={data} />
         </div>
-        <div className="absolute top-0 left-0">
+        <div className="absolute top-30 left-30">
           <Fav heroID={id} isFav={isFav} />
         </div>
       </div>

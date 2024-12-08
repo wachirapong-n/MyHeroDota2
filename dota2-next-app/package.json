@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "seed": "node prisma/seed.js"
   },
   "dependencies": {
     "@prisma/client": "^6.0.1",
@@ -15,7 +16,10 @@
     "react": "^18",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
-    "uuid" : "^11.0.3" 
+    "uuid" : "^11.0.3" ,
+    "js-cookie": "^3.0.5",
+    "bcryptjs" : "^2.4.3",
+    "sweetalert2": "^11.14.5"
   },
   "devDependencies": {
     "@types/node": "^20",

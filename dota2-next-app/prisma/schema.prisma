@@ -33,6 +33,6 @@ model UserFavHero{
 }
 
 model Admin{
-  email  String @id @default(uuid())
+  username  String @id @default(uuid())
   password  String
 }

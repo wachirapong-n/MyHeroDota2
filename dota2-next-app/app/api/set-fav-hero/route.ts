@@ -6,24 +6,22 @@ export async function POST(req) {
   if (req.method === "POST") {
     const data = await req.json();
 
-    const hasUser = await prisma.User.findUnique({
+    const hasUser = await prisma.User.findFirst({
       where: {
         id: data.userID
       }
     })
 
-    const hasHero = await prisma.Hero.findUnique({
+    const hasHero = await prisma.Hero.findFirst({
       where: {
         id: data.heroID
       }
     })
 
-    const hasFav = await prisma.UserFavHero.findUnique({
+    const hasFav = await prisma.UserFavHero.findFirst({
       where: {
-        userID_heroID: {
-          userID: data.userID,
-          heroID: data.heroID
-        }
+        userID: data.userID,
+        heroID: data.heroID
       }
     })
 
