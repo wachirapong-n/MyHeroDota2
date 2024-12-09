@@ -7,13 +7,12 @@ const prisma = new PrismaClient()
 export async function POST(req) {
   if (req.method === "POST") {
     const data = await req.json()
-    console.log(data)
     const hasUser = await prisma.Admin.findFirst({
       where: {
         username: data.username
       }
     })
-    console.log(hasUser)
+
     if (hasUser) {
       const isPasswordValid = await bcrypt.compare(data.password, hasUser.password);
       if (isPasswordValid) {

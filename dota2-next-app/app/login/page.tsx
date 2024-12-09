@@ -56,7 +56,7 @@ export default function Login() {
           <form onSubmit={handleSubmit}>
             <input type="text" onChange={(e) => setUsername(e.target.value)} className='w-full bg-gray-200 border py-2 px-3 rounded text-lg my-2' placeholder='Enter your username' />
             <input type="password" onChange={(e) => setPassword(e.target.value)} className='w-full bg-gray-200 border py-2 px-3 rounded text-lg my-2' placeholder='Enter your password' />
-            <button type='submit' className='bg-green-500 text-white border py-2 px-3 rounded text-lg my-2'>Sign In</button>
+            <button type='submit' className='bg-green-500 text-white border py-2 px-3 rounded text-lg my-2'>Login</button>
           </form>
           <hr className='my-3' />
 

@@ -25,7 +25,7 @@ export default function Dashboard() {
           b.id - a.id)
 
         var data = merge(topHero.fav, filterTopHero)
-        console.log(data)
+
         var sortedHero = data.sort((a, b) => {
           if (a.fav !== b.fav) {
             return b.fav - a.fav;
@@ -74,13 +74,12 @@ export default function Dashboard() {
 
   return (
     <div>
-      <div><span>Top 10 Favorite Heroes (Favorite)</span></div>
-      <div>
-        <table className="border-slate-400 border border-collapse">
-          <thead>
-            <tr>
-              <th onClick={handleSort} className="flex items-center justify-between border-slate-300 border">
-                <div>
+      <div className="relative overflow-x-auto">
+        <table className="w-full text-lg rtl:text-right text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr className="text-left text-base">
+              <th onClick={handleSort} className="flex items-center justify-between px-6 py-3 text-center" scope="col">
+                <div >
                   <span>Heroes</span>
                 </div>
                 <div>
@@ -106,48 +105,48 @@ export default function Dashboard() {
                   )}
                 </div>
               </th>
-              <th className="border-slate-400 border">Public Pick</th>
-              <th className="border-slate-400 border">Public Wins</th>
-              <th className="border-slate-400 border">Turbo Pick</th>
-              <th className="border-slate-400 border">Turbo Wins</th>
+
+              <th scope="col" className="px-6 py-3"><span>Public Picks</span></th>
+              <th scope="col" className="px-6 py-3"><span>Public Wins</span></th>
+              <th scope="col" className="px-6 py-3"><span>Turbo Picks</span></th>
+              <th scope="col" className="px-6 py-3"><span>Turbo Wins</span></th>
             </tr>
           </thead>
           <tbody>
             {filteredHero.map((hero) => (
-              <tr key={hero.id}>
-                <th className="border-slate-400 border">
-                  <div>
-                    <a href={`/heroes/${hero.id}`}><img src={path + hero.img}></img></a>
-                  </div>
-                  <a href={`../heroes/${hero.id}`} className="text-blue-500">
-
-                    <div className="relative group">
-                      <span data-proper-target="popover-default">{hero.localized_name}</span>
-
-                      <div data-popover
-                        id="popover-default"
-                        role="tooltip"
-                        className="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800 group-hover:visible group-hover:opacity-100">
-                        <div className="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
-                          <h3 className="font-semibold text-gray-900 dark:text-white">Last Favorite Date</h3>
-                        </div>
-                        <div className="px-3 py-2">
-                          <p>{hero.favDate}</p>
-                        </div>
-                        <div data-popper-arrow></div>
-                      </div>
+              <tr key={hero.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-left">
+                <th scope="col" className="px-6 py-3">
+                  <div className="justify-between inline-block align-middle relative">
+                    <div>
+                      <a href={`/heroes/${hero.id}`}><img className="h-auto max-w-lg rounded-lg" src={path + hero.img}></img></a>
                     </div>
-                  </a>
-                  <span> Total Favorite(s): {hero.fav}</span>
+                    <a href={`../heroes/${hero.id}`} className="text-blue-500">
+
+                      <div className="relative group">
+                        <span data-proper-target="popover-default">{hero.localized_name}</span>
+
+                        <div data-popover
+                          id="popover-default"
+                          role="tooltip"
+                          className="absolute z-10 invisible inline-block w-64 text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800 group-hover:visible group-hover:opacity-100">
+                          <div className="px-3 py-2 bg-gray-100 border-b border-gray-200 rounded-t-lg dark:border-gray-600 dark:bg-gray-700">
+                            <h3 className="font-semibold text-gray-900 dark:text-white">Last Favorite Date</h3>
+                          </div>
+                          <div className="px-3 py-2">
+                            <p>{hero.favDate}</p>
+                          </div>
+                          <div data-popper-arrow></div>
+                        </div>
+                      </div>
+                    </a>
+                    <span> Total Favorite(s): {hero.fav}</span>
+                  </div>
                 </th>
 
-
-
-
-                <th className="border-slate-400 border">{hero.pub_pick}</th>
-                <th className="border-slate-400 border">{hero.pub_win}</th>
-                <th className="border-slate-400 border">{hero.turbo_picks}</th>
-                <th className="border-slate-400 border">{hero.turbo_wins}</th>
+                <th className="px-6 py-3"><span>{hero.pub_pick}</span></th>
+                <th className="px-6 py-3">{<span>{((hero.pub_win / hero.pub_pick) * 100).toFixed(2)} %</span>}</th>
+                <th className="px-6 py-3"><span>{hero.turbo_picks}</span></th>
+                <th className="px-6 py-3">{<span>{((hero.turbo_wins / hero.turbo_picks) * 100).toFixed(2)} %</span>}</th>
               </tr>
 
             ))}
@@ -155,9 +154,6 @@ export default function Dashboard() {
           </tbody>
         </table>
       </div>
-
-
-
-    </div>
+    </div >
   );
 }
